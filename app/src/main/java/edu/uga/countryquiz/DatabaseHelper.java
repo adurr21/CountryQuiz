@@ -2,6 +2,7 @@ package edu.uga.countryquiz;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 /*
     DatabaseHelper creates the database with the needed tables if one does not exist, and
@@ -122,5 +124,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + COUNTRY_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + QUIZZES_TABLE_NAME);
         onCreate(db);
+    }
+
+
+    /**
+     * Gets a random entry from the countries database table and returns the result.
+     * @return String[3] The database row. String[0] is the unique ID, [1] is the country name, [2] is the continent.
+     */
+    public String[] getQuizQuestion() {
+        Log.d(MainActivity.LOG_TAG, "DatabaseHelper.class - getQuizQuestion() called");
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] randomResult = null;
+
+        String query = "SELECT * FROM " + COUNTRY_TABLE_NAME + " ORDER BY RANDOM() LIMIT 1";
+        Cursor cursor = db.rawQuery(query, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                randomResult = new String[3];
+                randomResult[0] = cursor.getString(cursor.getColumnIndexOrThrow(COUNTRY_COLUMN_ID));
+                randomResult[1] = cursor.getString(cursor.getColumnIndexOrThrow(COUNTRY_COLUMN_NAME));
+                randomResult[2] = cursor.getString(cursor.getColumnIndexOrThrow(COUNTRY_COLUMN_CONTINENT));
+
+                Log.d(MainActivity.LOG_TAG, "getQuizQuestion(), Random ID: " + randomResult[0]);
+                Log.d(MainActivity.LOG_TAG, "getQuizQuestion(), Random Country: " + randomResult[1]);
+                Log.d(MainActivity.LOG_TAG, "getQuizQuestion(), Random Continent: " + randomResult[2]);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+        }
+        return randomResult;
     }
 }
