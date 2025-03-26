@@ -1,8 +1,16 @@
 package edu.uga.countryquiz;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /*
     DatabaseHelper creates the database with the needed tables if one does not exist, and
@@ -48,8 +56,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_COUNTRY_TABLE = "CREATE TABLE " + COUNTRY_TABLE_NAME + "(" +
-            COUNTRY_COLUMN_ID + " INTEGER PRIMARY KEY," +
-            COUNTRY_COLUMN_NAME + " TEXT," +
+            COUNTRY_COLUMN_ID + " INTEGER," +
+            COUNTRY_COLUMN_NAME + " TEXT PRIMARY KEY," +
             COUNTRY_COLUMN_CONTINENT + " TEXT)";
 
     private static final String CREATE_QUIZZES_TABLE = "CREATE TABLE " + QUIZZES_TABLE_NAME + "(" +
@@ -79,8 +87,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d(MainActivity.LOG_TAG, "DatabaseHelper: onCreate() called");
         db.execSQL(CREATE_COUNTRY_TABLE);
         db.execSQL(CREATE_QUIZZES_TABLE);
+        try {
+            InputStreamReader isr = new InputStreamReader(MainActivity.assetManager.open("country_continent.csv"));
+            CSVReader csvReader = new CSVReader(isr);
+
+            //String[] headers = csvReader.readNext(); // Skip header row if it exists
+
+            String[] row;
+            int count = 0;
+            while ((row = csvReader.readNext()) != null) {
+                ContentValues values = new ContentValues();
+
+                // All values stored as Strings
+                values.put(DatabaseHelper.COUNTRY_COLUMN_ID, count++);
+                values.put(DatabaseHelper.COUNTRY_COLUMN_NAME, row[0]);
+                values.put(DatabaseHelper.COUNTRY_COLUMN_CONTINENT, row[1]);
+
+                db.insert(DatabaseHelper.COUNTRY_TABLE_NAME, null, values);
+            }
+
+            csvReader.close();
+        } catch (IOException | CsvValidationException e) {
+            e.printStackTrace();
+        } finally {
+            //db.close();
+        }
     }
 
     @Override
