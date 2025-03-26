@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String LOG_TAG = "edu.uga.countryquiz";
 
 
-    private DatabaseHelper dbHelper;
-    SQLiteDatabase db;
+    public static DatabaseHelper dbHelper;
+    public SQLiteDatabase db;
 
     protected static AssetManager assetManager;
 
