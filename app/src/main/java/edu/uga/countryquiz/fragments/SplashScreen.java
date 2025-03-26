@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import edu.uga.countryquiz.DatabaseHelper;
 import edu.uga.countryquiz.MainActivity;
 import edu.uga.countryquiz.R;
 
@@ -85,11 +86,19 @@ public class SplashScreen extends Fragment {
         viewResults = activity.findViewById(R.id.viewPastButton);
 
         viewResults.setOnClickListener(new ViewQuizResults());
+        startQuiz.setOnClickListener(new StartQuiz());
     }
     private class ViewQuizResults implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             ((MainActivity)getActivity()).viewQuizResults();
+        }
+    }
+
+    private class StartQuiz implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            MainActivity.dbHelper.getQuizQuestion();
         }
     }
 }
