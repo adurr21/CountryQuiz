@@ -13,6 +13,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -28,13 +31,12 @@ import edu.uga.countryquiz.content.QuizQuestion;
  */
 public class QuizFragment extends Fragment {
 
+    public static final String LOG_TAG = "edu.uga.countryquiz";
+
     private static final String ARG_QUIZ = "quiz";
-    private static final String ARG_QUESTION_INDEX = "questionIndex";
     private Quiz quiz;
-    private int currentQuestionIndex;
-    private TextView questionText;
-    private RadioGroup continentChoices;
-    private RadioButton choice1, choice2, choice3;
+    private ViewPager2 quizViewPager;
+    private ArrayList<String> userAnswers;
 
     public QuizFragment() {
         // Required empty public constructor
@@ -45,15 +47,12 @@ public class QuizFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param quiz Parameter 1.
-     * @param questionIndex Parameter 2.
      * @return A new instance of fragment QuizFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static QuizFragment newInstance(Quiz quiz, int questionIndex) {
+    public static QuizFragment newInstance(Quiz quiz) {
         QuizFragment fragment = new QuizFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_QUIZ, quiz);
-        args.putInt(ARG_QUESTION_INDEX, questionIndex);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,7 +62,10 @@ public class QuizFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             quiz = (Quiz) getArguments().getSerializable(ARG_QUIZ);
-            currentQuestionIndex = getArguments().getInt(ARG_QUESTION_INDEX);
+        }
+        userAnswers = new ArrayList<>(6);
+        for (int i = 0; i < 6; i++) {
+            userAnswers.add(null);
         }
     }
 
@@ -78,35 +80,35 @@ public class QuizFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize UI elements
-        questionText = view.findViewById(R.id.questionText);
-        continentChoices = view.findViewById(R.id.continentChoices);
-        choice1 = view.findViewById(R.id.choice1);
-        choice2 = view.findViewById(R.id.choice2);
-        choice3 = view.findViewById(R.id.choice3);
-
-        // Load the current question
-        loadQuestion();
+        quizViewPager = view.findViewById(R.id.quizViewPager);
+        quizViewPager.setAdapter(new QuizPagerAdapter(this));
+        quizViewPager.setUserInputEnabled(true); // Allow swiping
     }
 
-    private void loadQuestion() {
-        QuizQuestion currentQuestion = quiz.quizQuestions[currentQuestionIndex];
+    private class QuizPagerAdapter extends FragmentStateAdapter {
+        public QuizPagerAdapter(@NonNull Fragment fragment) {
+            super(fragment);
+        }
 
-        // Set the question text
-        questionText.setText("Name the continent on which " + currentQuestion.countryName + " is located");
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return QuizQuestionFragment.newInstance(quiz, position, userAnswers);
+        }
 
-        // Create a list of choices and shuffle them
-        ArrayList<String> choices = new ArrayList<>();
-        choices.add(currentQuestion.correctContinent);
-        choices.add(currentQuestion.wrongContinentOne);
-        choices.add(currentQuestion.wrongContinentTwo);
-        Collections.shuffle(choices);
-
-        // Set the radio button texts
-        choice1.setText("A. " + choices.get(0));
-        choice2.setText("B. " + choices.get(1));
-        choice3.setText("C. " + choices.get(2));
-
-        Log.d(MainActivity.LOG_TAG, "Loaded question " + (currentQuestionIndex + 1) + " for " + currentQuestion.countryName);
+        @Override
+        public int getItemCount() {
+            return 6; // Back to 6 questions
+        }
     }
+
+    public void showResults() {
+        Fragment fragment = QuizResultsFragment.newInstance(quiz, userAnswers);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack("quiz")
+                .commit();
+        Log.d(LOG_TAG, "showResults() called - transitioning to QuizResultsFragment");
+    }
+
 }

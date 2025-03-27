@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startQuiz() {
-        Quiz newQuiz = new Quiz(); // Create a new Quiz with 6 questions
-        Fragment fragment = QuizFragment.newInstance(newQuiz, 0); // Start with the first question
+        Quiz newQuiz = new Quiz();
+        Fragment fragment = QuizFragment.newInstance(newQuiz);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainerView, fragment)
                 .addToBackStack("main")
