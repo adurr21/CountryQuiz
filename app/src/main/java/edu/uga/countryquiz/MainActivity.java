@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         assetManager = getAssets();
 
-        dbHelper = new DatabaseHelper(getApplicationContext());
+        dbHelper = DatabaseHelper.getInstance(getApplicationContext());
 
         db = dbHelper.getWritableDatabase();
 

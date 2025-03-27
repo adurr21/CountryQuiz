@@ -21,6 +21,8 @@ import java.util.List;
     Extends: https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static DatabaseHelper instance;
     private static final String DATABASE_NAME = "CountryQuiz.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -83,8 +85,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             QUIZZES_Q6_ANSWERS + " TEXT," +
             QUIZZES_Q6_CORRECT_ANSWERS + " TEXT)";
 
-    public DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseHelper(context);
+        }
+        return instance;
     }
 
     @Override
