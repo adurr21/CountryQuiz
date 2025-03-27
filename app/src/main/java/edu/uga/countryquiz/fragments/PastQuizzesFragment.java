@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.uga.countryquiz.R;
+import edu.uga.countryquiz.content.Quiz;
+import edu.uga.countryquiz.content.Quizzes;
 import edu.uga.countryquiz.placeholder.PlaceholderContent;
 
 /**
@@ -57,15 +59,15 @@ public class PastQuizzesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_past_quizzes_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (true) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            RecyclerView recyclerView = view.findViewById(R.id.list);
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyQuizzesRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            recyclerView.setAdapter(new MyQuizzesRecyclerViewAdapter(Quizzes.getQuizzes()));
         }
         return view;
     }

@@ -1,11 +1,17 @@
 package edu.uga.countryquiz.fragments;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import edu.uga.countryquiz.MainActivity;
+import edu.uga.countryquiz.R;
+import edu.uga.countryquiz.content.Quiz;
 import edu.uga.countryquiz.placeholder.PlaceholderContent.PlaceholderItem;
 import edu.uga.countryquiz.databinding.FragmentPastQuizzesBinding;
 
@@ -17,24 +23,27 @@ import java.util.List;
  */
 public class MyQuizzesRecyclerViewAdapter extends RecyclerView.Adapter<MyQuizzesRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PlaceholderItem> mValues;
+    private final List<Quiz> mValues;
 
-    public MyQuizzesRecyclerViewAdapter(List<PlaceholderItem> items) {
+    public MyQuizzesRecyclerViewAdapter(List<Quiz> items) {
         mValues = items;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        return new ViewHolder(FragmentPastQuizzesBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.fragment_past_quizzes, parent, false);
 
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(holder.mItem.stringDate);
+        Log.d(MainActivity.LOG_TAG, "RecyclerAdapter - idView Text: " + holder.mItem.score);
+        holder.mContentView.setText(String.valueOf((int)holder.mItem.score) + "%");
     }
 
     @Override
@@ -45,12 +54,12 @@ public class MyQuizzesRecyclerViewAdapter extends RecyclerView.Adapter<MyQuizzes
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
         public final TextView mContentView;
-        public PlaceholderItem mItem;
+        public Quiz mItem;
 
-        public ViewHolder(FragmentPastQuizzesBinding binding) {
-            super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mIdView = itemView.findViewById(R.id.item_number);
+            mContentView = itemView.findViewById(R.id.content);
         }
 
         @Override

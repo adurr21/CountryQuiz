@@ -14,6 +14,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -163,5 +164,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Log.d(MainActivity.LOG_TAG, "storeQuizResult() - Date: " + dateString +
                 " | Score: " + q.score + " | saved to table with id: " + id);
+    }
+
+    public ArrayList<Quiz> getPastQuizzes() {
+        Log.d(MainActivity.LOG_TAG, "DatabaseHelper - getPastQuizzes() called");
+        ArrayList<Quiz> quizzes = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + QUIZZES_TABLE_NAME;
+        Cursor cursor = db.rawQuery(query, null);
+
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    String stringDate = cursor.getString(cursor.getColumnIndexOrThrow(QUIZZES_DATE));
+                    String score = cursor.getString(cursor.getColumnIndexOrThrow(QUIZZES_SCORE));
+                    Log.d(MainActivity.LOG_TAG, "stringDate: " + stringDate);
+                    Log.d(MainActivity.LOG_TAG, "score: " + score);
+                    quizzes.add(new Quiz(stringDate,score));
+                } while (cursor.moveToNext());
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        } finally {
+            cursor.close();
+            //db.close();
+        }
+        return quizzes;
     }
 }
