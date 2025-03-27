@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import edu.uga.countryquiz.DatabaseHelper;
+import edu.uga.countryquiz.MainActivity;
 import edu.uga.countryquiz.R;
 import edu.uga.countryquiz.content.Quiz;
 
@@ -86,5 +88,10 @@ public class QuizResultsFragment extends Fragment {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
         String dateString = dateFormat.format(quiz.date);
         resultsText.setText("Quiz Results\nScore: " + correctCount + "/6\nDate: " + dateString);
+
+        // Save result to database
+
+        quiz.score = correctCount / 6.00;
+        MainActivity.dbHelper.storeQuizResult(quiz);
     }
 }

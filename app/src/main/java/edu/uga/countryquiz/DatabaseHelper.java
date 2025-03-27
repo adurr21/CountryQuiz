@@ -3,6 +3,7 @@ package edu.uga.countryquiz;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -12,7 +13,11 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+
+import edu.uga.countryquiz.content.Quiz;
 
 /*
     DatabaseHelper creates the database with the needed tables if one does not exist, and
@@ -38,25 +43,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // on if the user answered the question correctly or not.
     // Ex: america,true
     public static final String QUIZZES_TABLE_NAME = "quizzes";
-    public static final String QUIZZES_COLUMN_ID = "_id";
-    public static final String QUIZZES_Q1_QUESTION = "q1_q";
-    public static final String QUIZZES_Q2_QUESTION = "q2_q";
-    public static final String QUIZZES_Q3_QUESTION = "q3_q";
-    public static final String QUIZZES_Q4_QUESTION = "q4_q";
-    public static final String QUIZZES_Q5_QUESTION = "q5_q";
-    public static final String QUIZZES_Q6_QUESTION = "q6_q";
-    public static final String QUIZZES_Q1_ANSWERS = "q1_a";
-    public static final String QUIZZES_Q2_ANSWERS = "q2_a";
-    public static final String QUIZZES_Q3_ANSWERS = "q3_a";
-    public static final String QUIZZES_Q4_ANSWERS = "q4_a";
-    public static final String QUIZZES_Q5_ANSWERS = "q5_a";
-    public static final String QUIZZES_Q6_ANSWERS = "q6_a";
-    public static final String QUIZZES_Q1_CORRECT_ANSWERS = "q1_ca";
-    public static final String QUIZZES_Q2_CORRECT_ANSWERS = "q2_ca";
-    public static final String QUIZZES_Q3_CORRECT_ANSWERS = "q3_ca";
-    public static final String QUIZZES_Q4_CORRECT_ANSWERS = "q4_ca";
-    public static final String QUIZZES_Q5_CORRECT_ANSWERS = "q5_ca";
-    public static final String QUIZZES_Q6_CORRECT_ANSWERS = "q6_ca";
+    public static final String QUIZZES_DATE = "date";
+    public static final String QUIZZES_SCORE = "score";
 
 
     private static final String CREATE_COUNTRY_TABLE = "CREATE TABLE " + COUNTRY_TABLE_NAME + "(" +
@@ -65,25 +53,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COUNTRY_COLUMN_CONTINENT + " TEXT)";
 
     private static final String CREATE_QUIZZES_TABLE = "CREATE TABLE " + QUIZZES_TABLE_NAME + "(" +
-            QUIZZES_COLUMN_ID + " INTEGER PRIMARY KEY," +
-            QUIZZES_Q1_QUESTION + " TEXT," +
-            QUIZZES_Q1_ANSWERS + " TEXT," +
-            QUIZZES_Q1_CORRECT_ANSWERS + " TEXT," +
-            QUIZZES_Q2_QUESTION + " TEXT," +
-            QUIZZES_Q2_ANSWERS + " TEXT," +
-            QUIZZES_Q2_CORRECT_ANSWERS + " TEXT," +
-            QUIZZES_Q3_QUESTION + " TEXT," +
-            QUIZZES_Q3_ANSWERS + " TEXT," +
-            QUIZZES_Q3_CORRECT_ANSWERS + " TEXT," +
-            QUIZZES_Q4_QUESTION + " TEXT," +
-            QUIZZES_Q4_ANSWERS + " TEXT," +
-            QUIZZES_Q4_CORRECT_ANSWERS + " TEXT," +
-            QUIZZES_Q5_QUESTION + " TEXT," +
-            QUIZZES_Q5_ANSWERS + " TEXT," +
-            QUIZZES_Q5_CORRECT_ANSWERS + " TEXT," +
-            QUIZZES_Q6_QUESTION + " TEXT," +
-            QUIZZES_Q6_ANSWERS + " TEXT," +
-            QUIZZES_Q6_CORRECT_ANSWERS + " TEXT)";
+            QUIZZES_DATE + " TEXT," +
+            QUIZZES_SCORE + " TEXT)";
 
     private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -166,5 +137,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return randomResult;
+    }
+
+    public void storeQuizResult(Quiz q) {
+        Log.d(MainActivity.LOG_TAG, "DatabaseHelper.class - storeQuizResult() called");
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
+        String dateString = dateFormat.format(q.date);
+
+        ContentValues content = new ContentValues();
+
+        content.put(QUIZZES_DATE, dateString);
+        content.put(QUIZZES_SCORE, q.score);
+
+        long id = -1;
+
+        try {
+            id = db.insertOrThrow(QUIZZES_TABLE_NAME,
+                    null,
+                    content);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(MainActivity.LOG_TAG, "storeQuizResult() - Date: " + dateString +
+                " | Score: " + q.score + " | saved to table with id: " + id);
     }
 }
