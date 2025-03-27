@@ -2,16 +2,16 @@ package edu.uga.countryquiz.content;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.io.Serializable;
 
-public class Quiz {
+public class Quiz implements Serializable {
 
     public QuizQuestion[] quizQuestions;
     public double score;
     public Date date;
     public int questionsAnswered;
 
-
-    Quiz() {
+    public Quiz() {
         HashSet<String> set = new HashSet<>();
         quizQuestions = new QuizQuestion[6];
         for (int i = 0; i < 6; i++) {

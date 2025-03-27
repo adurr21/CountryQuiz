@@ -16,6 +16,7 @@ import android.widget.Button;
 import edu.uga.countryquiz.DatabaseHelper;
 import edu.uga.countryquiz.MainActivity;
 import edu.uga.countryquiz.R;
+import edu.uga.countryquiz.content.Quiz;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -98,7 +99,8 @@ public class SplashScreen extends Fragment {
     private class StartQuiz implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            MainActivity.dbHelper.getQuizQuestion();
+            ((MainActivity) getActivity()).startQuiz();
+            // MainActivity.dbHelper.getQuizQuestion();
         }
     }
 }

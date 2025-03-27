@@ -24,7 +24,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.uga.countryquiz.content.Quiz;
 import edu.uga.countryquiz.fragments.PastQuizzesFragment;
+import edu.uga.countryquiz.fragments.QuizFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,5 +99,14 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainerView, fragment).addToBackStack("main");
         transaction.commit();
+    }
+
+    public void startQuiz() {
+        Quiz newQuiz = new Quiz(); // Create a new Quiz with 6 questions
+        Fragment fragment = QuizFragment.newInstance(newQuiz, 0); // Start with the first question
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack("main")
+                .commit();
     }
 }
