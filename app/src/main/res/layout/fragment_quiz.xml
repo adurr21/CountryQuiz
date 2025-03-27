@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Question Text -->
     <TextView
         android:id="@+id/questionText"
         android:layout_width="0dp"
@@ -20,7 +19,6 @@
         app:layout_constraintBottom_toTopOf="@id/continentChoices"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <!-- Radio Group for Answer Choices -->
     <RadioGroup
         android:id="@+id/continentChoices"
         android:layout_width="0dp"
