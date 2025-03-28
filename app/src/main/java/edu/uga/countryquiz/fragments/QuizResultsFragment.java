@@ -1,5 +1,6 @@
 package edu.uga.countryquiz.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,9 +32,11 @@ public class QuizResultsFragment extends Fragment {
     private static final String ARG_ANSWERS = "answers";
 
     private Quiz quiz;
+    private Activity activity;
+
     private ArrayList<String> userAnswers;
     private TextView resultsText;
-
+    private Button homeButton, pastQuizzesButton, startNewQuizButton;
     public QuizResultsFragment() {
         // Required empty public constructor
     }
@@ -74,8 +78,40 @@ public class QuizResultsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        activity = getActivity();
         resultsText = view.findViewById(R.id.resultsText);
         displayResults();
+        homeButton = activity.findViewById(R.id.homeButton);
+        pastQuizzesButton = activity.findViewById(R.id.pastQuizzesButton);
+        startNewQuizButton = view.findViewById(R.id.startNewQuizButton);
+
+        homeButton.setOnClickListener(new QuizResultsFragment.ReturnHome());
+        pastQuizzesButton.setOnClickListener(new QuizResultsFragment.ViewQuizResults());
+        startNewQuizButton.setOnClickListener(new StartNewQuiz());
+    }
+
+    private class ViewQuizResults implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ((MainActivity)getActivity()).viewQuizResults();
+        }
+    }
+
+    private class ReturnHome implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Fragment splashScreen = new SplashScreen();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, splashScreen)
+                    .commit();
+        }
+    }
+
+    private class StartNewQuiz implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ((MainActivity)getActivity()).startQuiz();
+        }
     }
 
     private void displayResults() {

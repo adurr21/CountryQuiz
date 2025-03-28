@@ -100,7 +100,6 @@ public class SplashScreen extends Fragment {
         @Override
         public void onClick(View v) {
             ((MainActivity) getActivity()).startQuiz();
-            // MainActivity.dbHelper.getQuizQuestion();
         }
     }
 }
