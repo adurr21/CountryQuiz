@@ -8,6 +8,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/returnHomeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Return to Home"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/startNewQuizButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start a New Quiz" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
 

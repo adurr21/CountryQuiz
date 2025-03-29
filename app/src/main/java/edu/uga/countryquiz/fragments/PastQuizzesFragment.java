@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import edu.uga.countryquiz.MainActivity;
 import edu.uga.countryquiz.R;
 import edu.uga.countryquiz.content.Quiz;
 import edu.uga.countryquiz.content.Quizzes;
@@ -26,6 +28,7 @@ public class PastQuizzesFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private Button returnHomeButton, startNewQuizButton;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -68,6 +71,20 @@ public class PastQuizzesFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(new MyQuizzesRecyclerViewAdapter(Quizzes.getQuizzes()));
+
+            returnHomeButton = view.findViewById(R.id.returnHomeButton);
+            returnHomeButton.setOnClickListener(v -> {
+                Fragment splashScreen = new SplashScreen();
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, splashScreen)
+                        .commit();
+            });
+
+            startNewQuizButton = view.findViewById(R.id.startNewQuizButton);
+            startNewQuizButton.setOnClickListener(v -> {
+                ((MainActivity)getActivity()).startQuiz();
+            });
+
         }
         return view;
     }
