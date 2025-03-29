@@ -17,7 +17,7 @@
             android:id="@+id/returnHomeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Return to Home"
+            android:text="Return Home"
             android:layout_marginEnd="8dp" />
 
         <Button
