@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class QuizQuestionFragment extends Fragment {
     private static final String ARG_QUIZ = "quiz";
     private static final String ARG_POSITION = "position";
     private static final String ARG_ANSWERS = "answers";
+    private static final String LOG_TAG = "edu.uga.countryquiz";
 
     private Quiz quiz;
     private int position;
@@ -38,7 +40,6 @@ public class QuizQuestionFragment extends Fragment {
     private TextView questionText;
     private RadioGroup continentChoices;
     private RadioButton choice1, choice2, choice3;
-    private Button submitButton;
 
     public QuizQuestionFragment() {
         // Required empty public constructor
@@ -88,20 +89,9 @@ public class QuizQuestionFragment extends Fragment {
         choice1 = view.findViewById(R.id.choice1);
         choice2 = view.findViewById(R.id.choice2);
         choice3 = view.findViewById(R.id.choice3);
-        submitButton = view.findViewById(R.id.submitButton);
-
         loadQuestion();
 
-        if (position == 5) {
-            submitButton.setVisibility(View.VISIBLE);
-            submitButton.setOnClickListener(v -> {
-                if (getParentFragment() instanceof QuizFragment) {
-                    ((QuizFragment) getParentFragment()).showResults();
-                }
-            });
-        } else {
-            submitButton.setVisibility(View.GONE);
-        }
+        Log.d(LOG_TAG, "QuizQuestionFragment: Displayed position " + position);
 
         continentChoices.setOnCheckedChangeListener((group, checkedId) -> {
             String selectedAnswer = null;
