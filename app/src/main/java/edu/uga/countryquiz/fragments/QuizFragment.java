@@ -82,7 +82,17 @@ public class QuizFragment extends Fragment {
 
         quizViewPager = view.findViewById(R.id.quizViewPager);
         quizViewPager.setAdapter(new QuizPagerAdapter(this));
-        quizViewPager.setUserInputEnabled(true); // Allow swiping
+        quizViewPager.setUserInputEnabled(true);
+
+        quizViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (position == 6) {
+                    showResults();
+                }
+            }
+        });
     }
 
     private class QuizPagerAdapter extends FragmentStateAdapter {
@@ -93,12 +103,16 @@ public class QuizFragment extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return QuizQuestionFragment.newInstance(quiz, position, userAnswers);
+            if (position < 6) {
+                return QuizQuestionFragment.newInstance(quiz, position, userAnswers);
+            }
+            return new Fragment(); // will be replaced by results fragment
         }
 
         @Override
         public int getItemCount() {
-            return 6; // Back to 6 questions
+            Log.d(LOG_TAG, "QuizFragment: getItemCount() called");
+            return 7;
         }
     }
 

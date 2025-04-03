@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.viewpager2.widget.ViewPager2;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -49,7 +50,6 @@ public class QuizResultsFragment extends Fragment {
      * @param answers Parameter 2.
      * @return A new instance of fragment QuizResultsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static QuizResultsFragment newInstance(Quiz quiz, ArrayList<String> answers) {
         QuizResultsFragment fragment = new QuizResultsFragment();
         Bundle args = new Bundle();
@@ -88,6 +88,17 @@ public class QuizResultsFragment extends Fragment {
         homeButton.setOnClickListener(new QuizResultsFragment.ReturnHome());
         pastQuizzesButton.setOnClickListener(new QuizResultsFragment.ViewQuizResults());
         startNewQuizButton.setOnClickListener(new StartNewQuiz());
+        disableSwipeBack();
+    }
+
+    private void disableSwipeBack() {
+        Fragment parentFragment = getParentFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        if (parentFragment instanceof QuizFragment) {
+            ViewPager2 viewPager = parentFragment.getView().findViewById(R.id.quizViewPager);
+            if (viewPager != null) {
+                viewPager.setUserInputEnabled(false);
+            }
+        }
     }
 
     private class ViewQuizResults implements View.OnClickListener {
