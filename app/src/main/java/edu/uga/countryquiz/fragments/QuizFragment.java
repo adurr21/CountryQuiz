@@ -37,6 +37,7 @@ public class QuizFragment extends Fragment {
     private Quiz quiz;
     private ViewPager2 quizViewPager;
     private ArrayList<String> userAnswers;
+    private int currentPosition = 0;
 
     public QuizFragment() {
         // Required empty public constructor
@@ -67,6 +68,17 @@ public class QuizFragment extends Fragment {
         for (int i = 0; i < 6; i++) {
             userAnswers.add(null);
         }
+
+        if (getArguments() != null && getArguments().containsKey("saved_answers")) {
+            ArrayList<String> savedAnswers = getArguments().getStringArrayList("saved_answers");
+            if (savedAnswers != null && savedAnswers.size() == 6) {
+                userAnswers = savedAnswers;
+            }
+        }
+
+        if (getArguments() != null && getArguments().containsKey("current_position")) {
+            currentPosition = getArguments().getInt("current_position", 0);
+        }
     }
 
     @Override
@@ -83,16 +95,20 @@ public class QuizFragment extends Fragment {
         quizViewPager = view.findViewById(R.id.quizViewPager);
         quizViewPager.setAdapter(new QuizPagerAdapter(this));
         quizViewPager.setUserInputEnabled(true);
-
         quizViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                currentPosition = position;
                 if (position == 6) {
                     showResults();
                 }
             }
         });
+
+        if (currentPosition > 0 && currentPosition < 6) {
+            quizViewPager.setCurrentItem(currentPosition, false);
+        }
     }
 
     private class QuizPagerAdapter extends FragmentStateAdapter {
@@ -125,4 +141,11 @@ public class QuizFragment extends Fragment {
         Log.d(LOG_TAG, "showResults() called - transitioning to QuizResultsFragment");
     }
 
+    public ArrayList<String> getUserAnswers() {
+        return userAnswers;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
 }

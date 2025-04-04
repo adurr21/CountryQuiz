@@ -1,10 +1,11 @@
 package edu.uga.countryquiz.content;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import edu.uga.countryquiz.MainActivity;
 
-public class QuizQuestion {
+public class QuizQuestion implements Serializable {
 
     public String id;
     public String countryName;

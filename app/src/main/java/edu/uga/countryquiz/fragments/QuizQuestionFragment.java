@@ -27,12 +27,10 @@ import edu.uga.countryquiz.content.QuizQuestion;
  * create an instance of this fragment.
  */
 public class QuizQuestionFragment extends Fragment {
-
     private static final String ARG_QUIZ = "quiz";
     private static final String ARG_POSITION = "position";
     private static final String ARG_ANSWERS = "answers";
     private static final String LOG_TAG = "edu.uga.countryquiz";
-
     private Quiz quiz;
     private int position;
     private ArrayList<String> userAnswers;
@@ -104,6 +102,7 @@ public class QuizQuestionFragment extends Fragment {
             }
             userAnswers.set(position, selectedAnswer);
         });
+        restorePreviousSelection();
     }
 
     private void loadQuestion() {
@@ -120,5 +119,22 @@ public class QuizQuestionFragment extends Fragment {
         choice1.setText("A. " + choices.get(0));
         choice2.setText("B. " + choices.get(1));
         choice3.setText("C. " + choices.get(2));
+    }
+
+    private void restorePreviousSelection() {
+        String savedAnswer = userAnswers.get(position);
+        if (savedAnswer != null) {
+            String choice1Text = choice1.getText().toString().substring(3);
+            String choice2Text = choice2.getText().toString().substring(3);
+            String choice3Text = choice3.getText().toString().substring(3);
+
+            if (savedAnswer.equals(choice1Text)) {
+                choice1.setChecked(true);
+            } else if (savedAnswer.equals(choice2Text)) {
+                choice2.setChecked(true);
+            } else if (savedAnswer.equals(choice3Text)) {
+                choice3.setChecked(true);
+            }
+        }
     }
 }

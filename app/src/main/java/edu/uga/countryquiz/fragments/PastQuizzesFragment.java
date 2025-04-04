@@ -24,9 +24,7 @@ import edu.uga.countryquiz.placeholder.PlaceholderContent;
  */
 public class PastQuizzesFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private Button returnHomeButton, startNewQuizButton;
 
@@ -37,7 +35,6 @@ public class PastQuizzesFragment extends Fragment {
     public PastQuizzesFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static PastQuizzesFragment newInstance(int columnCount) {
         PastQuizzesFragment fragment = new PastQuizzesFragment();
