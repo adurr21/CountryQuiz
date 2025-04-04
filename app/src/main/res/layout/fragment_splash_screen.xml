@@ -21,9 +21,12 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:text="Select a button to start a new quiz or view past quizzes"
+        android:text="Select a button to start a new quiz or view past quizzes. When taking a quiz, swipe left to view the next question. There are 6 questions and each question has 1 correct answer."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
