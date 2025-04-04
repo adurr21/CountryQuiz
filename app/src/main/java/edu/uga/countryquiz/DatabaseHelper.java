@@ -71,6 +71,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(MainActivity.LOG_TAG, "DatabaseHelper: onCreate() called");
+        new CreateDBAsync().execute(db);
+    }
+
+    private void initializeDatabase(SQLiteDatabase db) {
+        Log.d(MainActivity.LOG_TAG, "DatabaseHelper: initializeDatabase() called");
         db.execSQL(CREATE_COUNTRY_TABLE);
         db.execSQL(CREATE_QUIZZES_TABLE);
         try {
@@ -97,6 +102,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         } finally {
             //db.close();
+        }
+    }
+
+    private class CreateDBAsync extends AsyncTask<SQLiteDatabase, Void> {
+
+        @Override
+        protected Void doInBackground(SQLiteDatabase... arguments) {
+            initializeDatabase(arguments[0]);
+            Void voidVar = null;
+            return voidVar;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            Log.d(MainActivity.LOG_TAG, "DatabaseHelper: CreateDBAsync() - onPostExecute() called");
         }
     }
 
@@ -139,8 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return randomResult;
     }
-
-    public void storeQuizResult(Quiz q) {
+    public void storeQuizResults(Quiz q) {
         Log.d(MainActivity.LOG_TAG, "DatabaseHelper.class - storeQuizResult() called");
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -193,4 +212,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return quizzes;
     }
+
+    private class StoreQuizAsync extends AsyncTask<Quiz,Void> {
+
+        @Override
+        protected Void doInBackground(Quiz... arguments) {
+            storeQuizResults(arguments[0]);
+            Void voidVar = null;
+            return voidVar;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            Log.d(MainActivity.LOG_TAG, "onPostExecute - StoreQuizAsync");
+        }
+    }
+
+    public void storeQuizResult(Quiz q) {
+        new StoreQuizAsync().execute(q);
+    }
+
 }
