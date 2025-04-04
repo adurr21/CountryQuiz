@@ -3,11 +3,7 @@
 <!-- HEADER STYLE: CLASSIC -->
 <div align="center">
 
-<img src="readmeai/assets/logos/purple.svg" width="30%" style="position: relative; top: 0; right: 0;" alt="Project Logo"/>
-
 # COUNTRYQUIZ
-
-<em>Unlock Expertise, Unleash Innovation</em>
 
 <!-- BADGES -->
 <img src="https://img.shields.io/github/license/adurr21/CountryQuiz?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="license">
@@ -46,16 +42,7 @@
 
 ## Overview
 
-CountryQuiz is a comprehensive developer tool designed to streamline the development process for mobile apps.
-
-**Why CountryQuiz?**
-
-This project aims to provide a centralized platform for developers to manage their projects, ensuring consistency and efficiency across various components. The core features include:
-
-- 🔍 **Code Analysis**: Automatically analyzes code for errors, security vulnerabilities, and performance issues.
-- 💻 **Project Templates**: Offers pre-built templates for common mobile app structures, reducing development time and effort.
-- 📈 **Backup and Recovery**: Provides a secure backup system for critical data, ensuring minimal downtime in case of device failure or data loss.
-- 🔒 **Security Scanning**: Identifies potential security threats and vulnerabilities, enabling developers to address them proactively.
+CountryQuiz is a simple app that allows people to test their knowledge on countries and their locations on the globe.
 
 ---
 
@@ -605,68 +592,10 @@ This project aims to provide a centralized platform for developers to manage the
 
 ## Getting Started
 
-### Prerequisites
-
 This project requires the following dependencies:
 
-- **Programming Language:** unknown
+- **Programming Language:** Java
 - **Package Manager:** Gradle
-
-### Installation
-
-Build CountryQuiz from the source and intsall dependencies:
-
-1. **Clone the repository:**
-
-    ```sh
-    ❯ git clone https://github.com/adurr21/CountryQuiz
-    ```
-
-2. **Navigate to the project directory:**
-
-    ```sh
-    ❯ cd CountryQuiz
-    ```
-
-3. **Install the dependencies:**
-
-<!-- SHIELDS BADGE CURRENTLY DISABLED -->
-	<!-- [![gradle][gradle-shield]][gradle-link] -->
-	<!-- REFERENCE LINKS -->
-	<!-- [gradle-shield]: None -->
-	<!-- [gradle-link]: None -->
-
-	**Using [gradle](None):**
-
-	```sh
-	❯ echo 'INSERT-INSTALL-COMMAND-HERE'
-	```
-
-### Usage
-
-Run the project with:
-
-**Using [gradle](None):**
-```sh
-echo 'INSERT-RUN-COMMAND-HERE'
-```
-
-### Testing
-
-Countryquiz uses the {__test_framework__} test framework. Run the test suite with:
-
-**Using [gradle](None):**
-```sh
-echo 'INSERT-TEST-COMMAND-HERE'
-```
-
----
-
-## Roadmap
-
-- [X] **`Task 1`**: <strike>Implement feature one.</strike>
-- [ ] **`Task 2`**: Implement feature two.
-- [ ] **`Task 3`**: Implement feature three.
 
 ---
 
@@ -713,15 +642,10 @@ echo 'INSERT-TEST-COMMAND-HERE'
 
 ---
 
-## License
-
-Countryquiz is protected under the [LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
-
----
-
 ## Acknowledgments
 
-- Credit `contributors`, `inspiration`, `references`, etc.
+- Austin Durr
+- Jacob Sehl
 
 <div align="right">
 
