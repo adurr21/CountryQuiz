@@ -62,6 +62,11 @@ public class QuizQuestionFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,16 +77,34 @@ public class QuizQuestionFragment extends Fragment {
         }
     }
 
+    /**
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_quiz_question, container, false);
     }
 
+    /**
+     *
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        // Load the current question and its choices
         questionText = view.findViewById(R.id.questionText);
         continentChoices = view.findViewById(R.id.continentChoices);
         choice1 = view.findViewById(R.id.choice1);
@@ -90,7 +113,7 @@ public class QuizQuestionFragment extends Fragment {
         loadQuestion();
 
         Log.d(LOG_TAG, "QuizQuestionFragment: Displayed position " + position);
-
+        // Set listener for radio button selection
         continentChoices.setOnCheckedChangeListener((group, checkedId) -> {
             String selectedAnswer = null;
             if (checkedId == R.id.choice1) {
@@ -102,14 +125,18 @@ public class QuizQuestionFragment extends Fragment {
             }
             userAnswers.set(position, selectedAnswer);
         });
+        // Store the user's answer for the current question
         restorePreviousSelection();
     }
 
+    /**
+     * Loads the question.
+     */
     private void loadQuestion() {
         QuizQuestion currentQuestion = quiz.quizQuestions[position];
         questionText.setText((position + 1) + ". Name the continent on which " +
                 currentQuestion.countryName + " is located");
-
+        // Create a list of continent choices
         ArrayList<String> choices = new ArrayList<>();
         choices.add(currentQuestion.correctContinent);
         choices.add(currentQuestion.wrongContinentOne);
@@ -121,6 +148,9 @@ public class QuizQuestionFragment extends Fragment {
         choice3.setText("C. " + choices.get(2));
     }
 
+    /**
+     * Restores the user's previously selected answer for this question if it exists.
+     */
     private void restorePreviousSelection() {
         String savedAnswer = userAnswers.get(position);
         if (savedAnswer != null) {

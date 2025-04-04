@@ -59,6 +59,11 @@ public class QuizResultsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +73,18 @@ public class QuizResultsFragment extends Fragment {
         }
     }
 
+    /**
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -75,6 +92,12 @@ public class QuizResultsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_quiz_results, container, false);
     }
 
+    /**
+     *
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -91,16 +114,22 @@ public class QuizResultsFragment extends Fragment {
         disableSwipeBack();
     }
 
+    /**
+     * Disables swipe-back functionality for use when at the end of the viewpager2.
+     */
     private void disableSwipeBack() {
         Fragment parentFragment = getParentFragmentManager().findFragmentById(R.id.fragmentContainerView);
         if (parentFragment instanceof QuizFragment) {
             ViewPager2 viewPager = parentFragment.getView().findViewById(R.id.quizViewPager);
             if (viewPager != null) {
-                viewPager.setUserInputEnabled(false);
+                viewPager.setUserInputEnabled(false); // Disable user swiping
             }
         }
     }
 
+    /**
+     * Handle viewing past quiz results.
+     */
     private class ViewQuizResults implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -108,6 +137,9 @@ public class QuizResultsFragment extends Fragment {
         }
     }
 
+    /**
+     * Handle returning to the splash page.
+     */
     private class ReturnHome implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -118,6 +150,9 @@ public class QuizResultsFragment extends Fragment {
         }
     }
 
+    /**
+     * Handle starting a new quiz.
+     */
     private class StartNewQuiz implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -125,6 +160,9 @@ public class QuizResultsFragment extends Fragment {
         }
     }
 
+    /**
+     * Displays quiz results, calculates the score, and saves to database.
+     */
     private void displayResults() {
         int correctCount = 0;
         for (int i = 0; i < 6; i++) {
