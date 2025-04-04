@@ -12,8 +12,6 @@ import android.widget.TextView;
 import edu.uga.countryquiz.MainActivity;
 import edu.uga.countryquiz.R;
 import edu.uga.countryquiz.content.Quiz;
-import edu.uga.countryquiz.placeholder.PlaceholderContent.PlaceholderItem;
-import edu.uga.countryquiz.databinding.FragmentPastQuizzesBinding;
 
 import java.util.List;
 

@@ -15,9 +15,7 @@ import android.widget.Button;
 
 import edu.uga.countryquiz.MainActivity;
 import edu.uga.countryquiz.R;
-import edu.uga.countryquiz.content.Quiz;
 import edu.uga.countryquiz.content.Quizzes;
-import edu.uga.countryquiz.placeholder.PlaceholderContent;
 
 /**
  * A fragment representing a list of Items.
