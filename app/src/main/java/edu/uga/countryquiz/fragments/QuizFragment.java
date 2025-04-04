@@ -25,30 +25,38 @@ import edu.uga.countryquiz.content.Quiz;
 import edu.uga.countryquiz.content.QuizQuestion;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link QuizFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A {@link Fragment} subclass that manages a quiz with multiple questions displayed in a ViewPager2.
+ * Handles user answers and transitions to results upon completion.
+ * Use the {@link QuizFragment#newInstance} factory method to create an instance of this fragment.
  */
 public class QuizFragment extends Fragment {
 
+    /** The logging tag used for debugging purposes. */
     public static final String LOG_TAG = "edu.uga.countryquiz";
 
+    // Argument key for passing the Quiz object
     private static final String ARG_QUIZ = "quiz";
+    // The Quiz object containing the questions
     private Quiz quiz;
+    // ViewPager2 for navigating between quiz questions
     private ViewPager2 quizViewPager;
+    // List to store user answers for each question
     private ArrayList<String> userAnswers;
+    // Current position in the ViewPager
     private int currentPosition = 0;
 
+    /**
+     * Required empty public constructor for fragment instantiation.
+     */
     public QuizFragment() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Factory method to create a new instance of QuizFragment with the specified Quiz object.
      *
-     * @param quiz Parameter 1.
-     * @return A new instance of fragment QuizFragment.
+     * @param quiz the Quiz object containing the questions for this fragment
+     * @return a new instance of QuizFragment
      */
     public static QuizFragment newInstance(Quiz quiz) {
         QuizFragment fragment = new QuizFragment();
@@ -58,6 +66,12 @@ public class QuizFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initializes the fragment, setting up the Quiz object and user answers list from arguments.
+     * Restores saved answers and position if provided.
+     *
+     * @param savedInstanceState if non-null, this fragment is being re-constructed from a previous saved state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +95,27 @@ public class QuizFragment extends Fragment {
         }
     }
 
+    /**
+     * Inflates the layout for the quiz fragment.
+     *
+     * @param inflater the LayoutInflater to inflate the layout
+     * @param container the parent ViewGroup
+     * @param savedInstanceState if non-null, this fragment is being re-constructed from a previous saved state
+     * @return the inflated view for the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_quiz, container, false);
     }
 
+    /**
+     * Sets up the ViewPager2 with a QuizPagerAdapter and handles page changes.
+     * Restores the current position if applicable.
+     *
+     * @param view the view created by onCreateView
+     * @param savedInstanceState if non-null, this fragment is being re-constructed from a previous saved state
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -111,11 +139,25 @@ public class QuizFragment extends Fragment {
         }
     }
 
+    /**
+     * Adapter for the ViewPager2, managing fragments for each quiz question and a placeholder for results.
+     */
     private class QuizPagerAdapter extends FragmentStateAdapter {
+        /**
+         * Constructs the adapter with the parent fragment.
+         *
+         * @param fragment the parent fragment
+         */
         public QuizPagerAdapter(@NonNull Fragment fragment) {
             super(fragment);
         }
 
+        /**
+         * Creates a fragment for the given position, either a QuizQuestionFragment or a placeholder.
+         *
+         * @param position the position in the ViewPager
+         * @return a Fragment instance for the given position
+         */
         @NonNull
         @Override
         public Fragment createFragment(int position) {
@@ -125,6 +167,11 @@ public class QuizFragment extends Fragment {
             return new Fragment(); // will be replaced by results fragment
         }
 
+        /**
+         * Returns the total number of items in the ViewPager (6 questions + 1 results page).
+         *
+         * @return the number of items
+         */
         @Override
         public int getItemCount() {
             Log.d(LOG_TAG, "QuizFragment: getItemCount() called");
@@ -132,6 +179,9 @@ public class QuizFragment extends Fragment {
         }
     }
 
+    /**
+     * Transitions to the QuizResultsFragment to display the quiz results.
+     */
     public void showResults() {
         Fragment fragment = QuizResultsFragment.newInstance(quiz, userAnswers);
         getParentFragmentManager().beginTransaction()
@@ -141,10 +191,20 @@ public class QuizFragment extends Fragment {
         Log.d(LOG_TAG, "showResults() called - transitioning to QuizResultsFragment");
     }
 
+    /**
+     * Retrieves the list of user answers.
+     *
+     * @return the ArrayList containing user answers
+     */
     public ArrayList<String> getUserAnswers() {
         return userAnswers;
     }
 
+    /**
+     * Retrieves the current position in the ViewPager.
+     *
+     * @return the current position
+     */
     public int getCurrentPosition() {
         return currentPosition;
     }
