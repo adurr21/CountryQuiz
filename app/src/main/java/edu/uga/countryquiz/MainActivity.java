@@ -43,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> userAnswers = null;
     private int currentQuestionPosition = 0;
 
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -60,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         if (savedInstanceState != null) {
-            restoreAppState(savedInstanceState);
-        } else {
+            restoreAppState(savedInstanceState); // Restore state if available
+        } else { // Load splash screen if no fragment exists
             if (getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView) == null) {
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.fragmentContainerView, new SplashScreen())
@@ -70,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Restores app state from saved instance bundle.
+     * @param savedInstanceState Bundle containing the saved state.
+     */
     private void restoreAppState(Bundle savedInstanceState) {
         currentFragmentTag = savedInstanceState.getString(STATE_KEY_CURRENT_FRAGMENT, "splash");
         if (savedInstanceState.containsKey(STATE_KEY_ACTIVE_QUIZ)) {
@@ -87,65 +98,83 @@ public class MainActivity extends AppCompatActivity {
                 args.putStringArrayList("saved_answers", userAnswers);
             }
             fragment.setArguments(args);
+            // Replace with quiz fragment
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerView, fragment)
                     .commit();
         } else if (currentFragmentTag.equals("past_quizzes")) {
+            // Replace with past quizzes fragment
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerView, new PastQuizzesFragment())
                     .commit();
         } else {
+            // Replace with splash screen
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerView, new SplashScreen())
                     .commit();
         }
     }
 
+    /**
+     * Saves the current app state into a bundle.
+     * @param outState Bundle to save the state into.
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(STATE_KEY_CURRENT_FRAGMENT, currentFragmentTag);
+        outState.putString(STATE_KEY_CURRENT_FRAGMENT, currentFragmentTag); // Save fragment tag
         if (activeQuiz != null) {
-            outState.putSerializable(STATE_KEY_ACTIVE_QUIZ, activeQuiz);
+            outState.putSerializable(STATE_KEY_ACTIVE_QUIZ, activeQuiz); // Save active quiz
         }
         if (userAnswers != null) {
-            outState.putStringArrayList(STATE_KEY_USER_ANSWERS, userAnswers);
+            outState.putStringArrayList(STATE_KEY_USER_ANSWERS, userAnswers); // Save user answers
         }
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
         if (currentFragment instanceof QuizFragment) {
             QuizFragment quizFragment = (QuizFragment) currentFragment;
             int position = quizFragment.getCurrentPosition();
-            outState.putInt("current_question_position", position);
+            outState.putInt("current_question_position", position); // Save current question position
         }
         Log.d(LOG_TAG, "onSaveInstanceState: Save app state");
     }
 
+    /**
+     * Called when activity is paused.
+     */
     @Override
     protected void onPause() {
         super.onPause();
 
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        if (currentFragment instanceof QuizFragment) {
+        if (currentFragment instanceof QuizFragment) { // if pausing during a quiz
             QuizFragment quizFragment = (QuizFragment) currentFragment;
             userAnswers = quizFragment.getUserAnswers();
             currentQuestionPosition = quizFragment.getCurrentPosition();
             currentFragmentTag = "quiz";
-        } else if (currentFragment instanceof PastQuizzesFragment) {
+        } else if (currentFragment instanceof PastQuizzesFragment) { // if pausing in past quizzes fragment
             currentFragmentTag = "past_quizzes";
         }
 
         Log.d(LOG_TAG, "onPause: Captured app state");
     }
 
+    /**
+     * Called when the activity resumes.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(LOG_TAG, "onResume: Resumed app");
     }
 
+    /**
+     * Retrieves the records from the database.
+     * @param table The name of the table.
+     * @return A list of records as strings.
+     */
     public List<String> getAllRecords(String table) {
         List<String> records = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase(); // Get readable database
 
         if (table.equals(DatabaseHelper.COUNTRY_TABLE_NAME)) {
             Cursor cursor = db.query(
@@ -172,12 +201,18 @@ public class MainActivity extends AppCompatActivity {
         return records;
     }
 
+    /**
+     * Called when activity stops.
+     */
     @Override
     protected void onStop() {
         super.onStop();
         db.close();
     }
 
+    /**
+     * Displays the past quizzes fragment.
+     */
     public void viewQuizResults() {
         Fragment fragment = new PastQuizzesFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -186,6 +221,9 @@ public class MainActivity extends AppCompatActivity {
         currentFragmentTag = "past_quizzes";
     }
 
+    /**
+     * Displays the quiz fragment.
+     */
     public void startQuiz() {
         Quiz newQuiz = new Quiz();
         Fragment fragment = QuizFragment.newInstance(newQuiz);
@@ -193,9 +231,9 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragmentContainerView, fragment)
                 .addToBackStack("main")
                 .commit();
-        activeQuiz = newQuiz;
+        activeQuiz = newQuiz; // Set active quiz
         currentFragmentTag = "quiz";
-        userAnswers = new ArrayList<>(6);
+        userAnswers = new ArrayList<>(6); // Initialize user answers list
         for (int i = 0; i < 6; i++) {
             userAnswers.add(null);
         }
